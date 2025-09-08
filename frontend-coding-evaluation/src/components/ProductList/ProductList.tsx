@@ -40,6 +40,7 @@ const ProductList = ({ products, onAddToCart, tags }: ProductListProps) => {
           </div>
         </div>
       ))}
+      {filteredProducts.length === 0 && <p>No products available</p>}
     </div>
   );
 };

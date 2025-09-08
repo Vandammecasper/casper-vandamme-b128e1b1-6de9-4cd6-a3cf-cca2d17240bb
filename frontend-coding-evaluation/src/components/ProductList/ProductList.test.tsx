@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { describe, it, expect, vi } from 'vitest';
 
@@ -26,7 +27,20 @@ describe('ProductList Component', () => {
     expect(screen.getByText('$99.99')).toBeInTheDocument();
   });
 
-  it('calls onAddToCart when Add to Cart button is clicked', async () => {});
+  it('calls onAddToCart when Add to Cart button is clicked', async () => {
+    const mockAddToCart = vi.fn();
+    render(<ProductList products={mockProducts} onAddToCart={mockAddToCart} />);
 
-  it('renders empty state when no products', () => {});
+    const addButton = screen.getByText('Add to Cart');
+    await userEvent.click(addButton);
+
+    expect(mockAddToCart).toHaveBeenCalledWith(mockProducts[0]);
+  });
+
+  it('renders empty state when no products', () => {
+    const mockAddToCart = vi.fn();
+    render(<ProductList products={[]} onAddToCart={mockAddToCart} />);
+
+    expect(screen.getByText('No products available')).toBeInTheDocument();
+  });
 });

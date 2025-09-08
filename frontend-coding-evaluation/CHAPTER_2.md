@@ -30,7 +30,7 @@ I added filtration based on categories and pricing as these are the two most com
 There are 2 test defined in the ProductList test suite that require implmentation
 
 - Category: High Value
-- [ ] Fixed
+- [X] Fixed
 - Notes:
 
 ### 5. Cart State Management
