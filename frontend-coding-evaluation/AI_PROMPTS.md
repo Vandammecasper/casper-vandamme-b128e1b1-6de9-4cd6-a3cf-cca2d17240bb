@@ -23,3 +23,6 @@ When using AI assistance, document:
 5. Any learning outcomes
 
 ## Used AI Prompts
+
+can you add some debouncing on the handleSearch function so that there won't be any unnecessary rerenders?
+    can you make a custom react hook from this functionality for me?

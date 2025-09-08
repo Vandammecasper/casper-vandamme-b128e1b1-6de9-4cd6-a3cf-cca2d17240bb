@@ -7,7 +7,7 @@ The search input updates on every keystroke, causing unnecessary re-renders. Imp
 Create a custom React hook for this feature
 
 - Category: Medium
-- [ ] Fixed
+- [x] Fixed
 - Notes:
 
 ### 2. Search Enter Key Functionality

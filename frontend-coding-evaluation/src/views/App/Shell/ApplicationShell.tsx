@@ -4,12 +4,14 @@ import React, { useState, useEffect } from 'react';
 import Cart from '../../../components/Cart/Cart';
 import ProductList from '../../../components/ProductList';
 import { addProductTags } from '../../../helpers/addProductTags';
+import useDebouncedValue from '../../../hooks/useDebouncedValueHook';
 import { Product } from '../../../types/Product';
 
 function ApplicationShell() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<Product[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [rawSearchTerm, setRawSearchTerm] = useState('');
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -21,8 +23,23 @@ function ApplicationShell() {
       });
   }, []);
 
+  const searchTerm = useDebouncedValue(rawSearchTerm, 400);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const filter = products.filter((product) => {
+        const lowerCaseTerm = searchTerm.toLowerCase();
+        console.log(product.title.toLowerCase().includes(lowerCaseTerm));
+        return product.title.toLowerCase().includes(lowerCaseTerm);
+      });
+      setFilteredProducts(filter as Product[]);
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [searchTerm, products]);
+
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    setRawSearchTerm(event.target.value);
   };
 
   const addToCart = (product: Product) => {
@@ -48,7 +65,7 @@ function ApplicationShell() {
               <div className="relative">
                 <input
                   type="text"
-                  value={searchTerm}
+                  value={rawSearchTerm}
                   onChange={handleSearch}
                   className="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
                   placeholder="Search products..."
@@ -74,7 +91,7 @@ function ApplicationShell() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           <div className="md:col-span-2">
-            <ProductList products={products} onAddToCart={addToCart} />
+            <ProductList products={filteredProducts} onAddToCart={addToCart} />
           </div>
           <div>
             <Cart items={cart} total={cartTotal} onRemoveFromCart={removeFromCart} />
