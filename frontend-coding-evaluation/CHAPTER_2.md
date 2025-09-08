@@ -10,7 +10,7 @@ Create a custom React hook for this feature
 - [x] Fixed
 - Notes:
 
-### 2. Search Enter Key Functionality
+### 2. Search Enter Key Functionality (skipped)
 The search functionality doesn't respond to the Enter key press, requiring implementation of keyboard support.
 Add a test to check the searchItem is being set when the Enter key is pressed
 
@@ -22,8 +22,9 @@ Add a test to check the searchItem is being set when the Enter key is pressed
 The search functionality needs improvement for better filtering capabilities.
 
 - Category: Medium
-- [ ] Fixed
+- [X] Fixed
 - Notes:
+I added filtration based on categories and pricing as these are the two most commonly used filters
 
 ### 4. Implement the missing product list tests
 There are 2 test defined in the ProductList test suite that require implmentation

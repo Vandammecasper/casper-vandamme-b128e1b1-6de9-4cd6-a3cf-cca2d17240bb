@@ -1,4 +1,4 @@
-import { Search, ShoppingCart, User } from 'lucide-react';
+import { Filter, Search, ShoppingCart, User } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
 import Cart from '../../../components/Cart/Cart';
@@ -12,7 +12,19 @@ function ApplicationShell() {
   const [cart, setCart] = useState<Product[]>([]);
   const [rawSearchTerm, setRawSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [filterVisible, setFilterVisible] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const searchTerm = useDebouncedValue(rawSearchTerm, 400);
+  const priceRanges = [
+    { label: '0-50', min: 0, max: 50 },
+    { label: '50-100', min: 50, max: 100 },
+    { label: '100-150', min: 100, max: 150 },
+    { label: '150-500', min: 150, max: 500 },
+    { label: '500-1000', min: 500, max: 1000 },
+  ];
 
   useEffect(() => {
     fetch('https://fakestoreapi.com/products')
@@ -23,23 +35,47 @@ function ApplicationShell() {
       });
   }, []);
 
-  const searchTerm = useDebouncedValue(rawSearchTerm, 400);
+  useEffect(() => {
+    const uniqueCategories = Array.from(new Set(products.map((product) => product.category)));
+    setCategories(uniqueCategories);
+  }, [products]);
 
   useEffect(() => {
+    let filtered = products;
+
     if (searchTerm) {
-      const filter = products.filter((product) => {
-        const lowerCaseTerm = searchTerm.toLowerCase();
-        console.log(product.title.toLowerCase().includes(lowerCaseTerm));
-        return product.title.toLowerCase().includes(lowerCaseTerm);
-      });
-      setFilteredProducts(filter as Product[]);
-    } else {
-      setFilteredProducts(products);
+      const lowerCaseTerm = searchTerm.toLowerCase();
+      filtered = filtered.filter((product) => product.title.toLowerCase().includes(lowerCaseTerm));
     }
-  }, [searchTerm, products]);
+
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter((product) => selectedCategories.includes(product.category));
+    }
+
+    if (selectedPriceRanges.length > 0) {
+      filtered = filtered.filter((product) =>
+        selectedPriceRanges.some((rangeLabel) => {
+          const range = priceRanges.find((r) => r.label === rangeLabel);
+          return range && product.price >= range.min && product.price < range.max;
+        }),
+      );
+    }
+
+    setFilteredProducts(filtered);
+  }, [searchTerm, products, selectedCategories, selectedPriceRanges]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRawSearchTerm(event.target.value);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category],
+    );
+  };
+
+  const handlePriceRangeChange = (label: string) => {
+    setSelectedPriceRanges((prev) => (prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]));
   };
 
   const addToCart = (product: Product) => {
@@ -71,6 +107,41 @@ function ApplicationShell() {
                   placeholder="Search products..."
                 />
                 <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <button onClick={() => setFilterVisible(!filterVisible)}>
+                  <Filter className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
+                </button>
+                {filterVisible && (
+                  <div className="absolute mt-2 w-56 bg-white border border-gray-300 rounded-lg shadow-lg p-4 right-0">
+                    <p className="font-bold">Categories</p>
+                    <ul className="mt-2 max-h-40 overflow-y-auto">
+                      {categories.map((category) => (
+                        <li key={category} className="py-1 px-2 flex justify-between">
+                          <p>{category}</p>
+                          <input
+                            className="cursor-pointer"
+                            type="checkbox"
+                            checked={selectedCategories.includes(category)}
+                            onChange={() => handleCategoryChange(category)}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="font-bold mt-2">Price</p>
+                    <ul>
+                      {priceRanges.map((range) => (
+                        <li key={range.label} className="flex justify-between py-1 px-2">
+                          <p>{range.label}</p>
+                          <input
+                            className="cursor-pointer"
+                            type="checkbox"
+                            checked={selectedPriceRanges.includes(range.label)}
+                            onChange={() => handlePriceRangeChange(range.label)}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
               <button className="p-2 hover:bg-gray-100 rounded-full">
                 <User className="h-6 w-6" />
