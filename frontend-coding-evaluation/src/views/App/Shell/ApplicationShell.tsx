@@ -10,8 +10,6 @@ function ApplicationShell() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [cartLimit, setCartLimit] = useState(false);
-  const [cartBump, setCartBump] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -28,13 +26,6 @@ function ApplicationShell() {
   };
 
   const addToCart = (product: Product) => {
-    if (cart.length > 4) {
-      setCartLimit(true);
-      setTimeout(() => {
-        setCartLimit(false);
-      }, 5000);
-      return;
-    }
     setCart([...cart, product]);
   };
 
@@ -42,44 +33,10 @@ function ApplicationShell() {
     setCart(cart.filter((item) => item.id !== product.id));
   };
 
-  const addExistingItem = (product: Product) => {
-    if (cart.length > 4) {
-      setCartLimit(true);
-      setTimeout(() => {
-        setCartLimit(false);
-      }, 5000);
-      return;
-    }
-    setCart([...cart, product]);
-  };
-
-  const removeExistingItem = (product: Product) => {
-    const index = cart.findIndex((item) => item.id === product.id);
-    if (index !== -1) {
-      const newCart = [...cart];
-      newCart.splice(index, 1);
-      setCart(newCart);
-    }
-  };
-
-  useEffect(() => {
-    if (cart.length === 0) return;
-    setCartBump(true);
-    const timer = setTimeout(() => {
-      setCartBump(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [cart.length]);
-
-  const cartTotal = cart.reduce((total, item) => total + item.price, 0);
+  const cartTotal = cart.reduce((total, item) => total + item.price, 1);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {cartLimit && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow">
-          Cart limit reached. You can only add up to 5 items.
-        </div>
-      )}
       <header className="bg-white shadow-sm">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
@@ -104,11 +61,7 @@ function ApplicationShell() {
               <button className="p-2 hover:bg-gray-100 rounded-full relative">
                 <ShoppingCart className="h-6 w-6" />
                 {cart.length > 0 && (
-                  <span
-                    className={`absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-transform duration-400 ${
-                      cartBump ? 'animate-bounce' : ''
-                    }`}
-                  >
+                  <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {cart.length}
                   </span>
                 )}
@@ -124,13 +77,7 @@ function ApplicationShell() {
             <ProductList products={products} onAddToCart={addToCart} />
           </div>
           <div>
-            <Cart
-              items={cart}
-              total={cartTotal}
-              onRemoveFromCart={removeFromCart}
-              OnAddExistingItem={addExistingItem}
-              onRemoveExistingItem={removeExistingItem}
-            />
+            <Cart items={cart} total={cartTotal} onRemoveFromCart={removeFromCart} />
           </div>
         </div>
       </main>

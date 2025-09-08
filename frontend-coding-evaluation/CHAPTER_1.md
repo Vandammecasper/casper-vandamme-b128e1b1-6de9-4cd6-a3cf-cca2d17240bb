@@ -6,7 +6,7 @@
 The cart total is incorrectly calculated due to an initialization error in the reduce function
 
 - Category: Quick Win
-- [X] Fixed
+- [ ] Fixed
 - Notes:
 
 ### 2. Typography Hierarchy
@@ -23,14 +23,14 @@ The application lacks a clear typography system, affecting readability and visua
 ### 3. Cart Counter UI/UX
 The cart quantity controls need improvement for better user interaction and accessibility.
 
-1. Add clear visual indicators for item quantities V
-2. Implement smooth animations for counter updates V
-3. Ensure counter buttons are accessible V
-4. Add keyboard support for quantity changes V
-5. Provide user feedback for quantity limits, limit it to 5 items V
+1. Add clear visual indicators for item quantities
+2. Implement smooth animations for counter updates
+3. Ensure counter buttons are accessible
+4. Add keyboard support for quantity changes
+5. Provide user feedback for quantity limits, limit it to 5 items
 
 - Category: Medium
-- [X] Fixed
+- [ ] Fixed
 - Notes:
 
 ### 4. Missing Error Handling

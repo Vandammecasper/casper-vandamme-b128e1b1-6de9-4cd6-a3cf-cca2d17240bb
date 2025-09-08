@@ -6,15 +6,13 @@ type CartProps = {
   items: Product[];
   total: number;
   onRemoveFromCart: (product: Product) => void;
-  onRemoveExistingItem: (product: Product) => void;
-  OnAddExistingItem: (product: Product) => void;
 };
 
 type CartItem = {
   quantity: number;
 } & Product;
 
-function Cart({ items, total, onRemoveFromCart, onRemoveExistingItem, OnAddExistingItem }: CartProps) {
+function Cart({ items, total, onRemoveFromCart }: CartProps) {
   // Group items by id and count quantities
   const cartItems = items.reduce<CartItem[]>((acc, item) => {
     const existingItem = acc.find((i) => i.id === item.id);
@@ -37,11 +35,11 @@ function Cart({ items, total, onRemoveFromCart, onRemoveExistingItem, OnAddExist
                 <h3 className="text-sm font-medium text-gray-900">{item.title}</h3>
                 <p className="mt-1 text-sm text-gray-500">${item.price}</p>
                 <div className="mt-2 flex items-center gap-2">
-                  <button className="p-1 hover:bg-gray-100 rounded" onClick={() => onRemoveExistingItem(item)}>
+                  <button className="p-1 hover:bg-gray-100 rounded">
                     <Minus className="h-4 w-4" />
                   </button>
                   <span className="text-sm font-medium">{item.quantity}</span>
-                  <button className="p-1 hover:bg-gray-100 rounded" onClick={() => OnAddExistingItem(item)}>
+                  <button className="p-1 hover:bg-gray-100 rounded">
                     <Plus className="h-4 w-4" />
                   </button>
                 </div>
