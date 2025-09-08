@@ -5,18 +5,18 @@ import Cart from '../../../components/Cart/Cart';
 import ProductList from '../../../components/ProductList';
 import { addProductTags } from '../../../helpers/addProductTags';
 import useDebouncedValue from '../../../hooks/useDebouncedValueHook';
+import useCartStore from '../../../stores/cartStore';
 import { Product } from '../../../types/Product';
 
 function ApplicationShell() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<Product[]>([]);
+  const cart = useCartStore((state) => state.cartItems);
   const [rawSearchTerm, setRawSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [filterVisible, setFilterVisible] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const searchTerm = useDebouncedValue(rawSearchTerm, 400);
   const priceRanges = [
     { label: '0-50', min: 0, max: 50 },
@@ -78,13 +78,9 @@ function ApplicationShell() {
     setSelectedPriceRanges((prev) => (prev.includes(label) ? prev.filter((l) => l !== label) : [...prev, label]));
   };
 
-  const addToCart = (product: Product) => {
-    setCart([...cart, product]);
-  };
-
-  const removeFromCart = (product: Product) => {
-    setCart(cart.filter((item) => item.id !== product.id));
-  };
+  const addToCart = useCartStore((state) => state.addToCart);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const removeItemFromCart = useCartStore((state) => state.removeItemFromCart);
 
   const cartTotal = cart.reduce((total, item) => total + item.price, 1);
 
@@ -165,7 +161,13 @@ function ApplicationShell() {
             <ProductList products={filteredProducts} onAddToCart={addToCart} />
           </div>
           <div>
-            <Cart items={cart} total={cartTotal} onRemoveFromCart={removeFromCart} />
+            <Cart
+              items={cart}
+              total={cartTotal}
+              onRemoveFromCart={removeFromCart}
+              onAddExistingItem={addToCart}
+              onRemoveExistingItem={removeItemFromCart}
+            />
           </div>
         </div>
       </main>
