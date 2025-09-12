@@ -23,3 +23,11 @@ When using AI assistance, document:
 5. Any learning outcomes
 
 ## Used AI Prompts
+
+can you add some debouncing on the handleSearch function so that there won't be any unnecessary rerenders?
+    can you make a custom react hook from this functionality for me?
+
+can you make me a filter function using the checkboxes of the categories?
+    can you do the same for the price filtration?
+
+why isn't my store persisted over refreshes even though I added the persist middleware from zustand?

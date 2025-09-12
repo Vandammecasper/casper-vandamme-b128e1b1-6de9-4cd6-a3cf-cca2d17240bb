@@ -7,10 +7,10 @@ The search input updates on every keystroke, causing unnecessary re-renders. Imp
 Create a custom React hook for this feature
 
 - Category: Medium
-- [ ] Fixed
+- [x] Fixed
 - Notes:
 
-### 2. Search Enter Key Functionality
+### 2. Search Enter Key Functionality (skipped)
 The search functionality doesn't respond to the Enter key press, requiring implementation of keyboard support.
 Add a test to check the searchItem is being set when the Enter key is pressed
 
@@ -22,14 +22,15 @@ Add a test to check the searchItem is being set when the Enter key is pressed
 The search functionality needs improvement for better filtering capabilities.
 
 - Category: Medium
-- [ ] Fixed
+- [X] Fixed
 - Notes:
+I added filtration based on categories and pricing as these are the two most commonly used filters
 
 ### 4. Implement the missing product list tests
 There are 2 test defined in the ProductList test suite that require implmentation
 
 - Category: High Value
-- [ ] Fixed
+- [X] Fixed
 - Notes:
 
 ### 5. Cart State Management
@@ -40,14 +41,14 @@ Cart state management needs improvement for better performance and user experien
 3. Maintain cart state across page refreshes
 
 - Category: High Value
-- [ ] Fixed
+- [X] Fixed
 - Notes:
 
 ### 6. Cart Persistence
 Cart contents are lost on page refresh, requiring implementation of local storage or similar persistence.
 
 - Category: Medium
-- [ ] Fixed
+- [X] Fixed
 - Notes:
 
 ### 7. Cart Item Quantity Management
